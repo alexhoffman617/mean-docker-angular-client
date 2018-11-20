@@ -29,3 +29,13 @@ script:
 after_success:
   - docker build -t angular-client:dev .
   - docker run -d --name angular-client -p  4200:4200 angular-client:dev
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
+  on:
+    branch: site
+  target_branch: gh-pages
+  local_dir: ${TRAVIS_BUILD_DIR}/output
+  fqdn: echorand.me
