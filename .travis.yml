@@ -1,0 +1,39 @@
+sudo: required
+dist: trusty
+language: node_js
+node_js:
+  - '10.4.0'
+
+services:
+  - docker
+
+addons:
+apt:
+  sources:
+    - google-chrome
+  packages:
+    - google-chrome-stable
+
+before_install:
+  # - export CHROME_BIN=chromium-browser
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+
+before_script:
+  - npm install
+
+script:
+  - npm run test -- --watch=false
+  # - npm run e2e
+
+after_success:
+  - docker build -t angular-client:dev .
+  - docker run -d --name angular-client -p  4200:4200 angular-client:dev
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
+  on:
+    branch: master
+  target_branch: gh-pages
