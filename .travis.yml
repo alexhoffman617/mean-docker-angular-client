@@ -38,4 +38,3 @@ deploy:
     branch: site
   target_branch: gh-pages
   local_dir: ${TRAVIS_BUILD_DIR}/output
-  fqdn: echorand.me
