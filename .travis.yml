@@ -13,6 +13,9 @@ apt:
     - google-chrome
   packages:
     - google-chrome-stable
+cache:
+  directories:
+    - 'node_modules' # This will tell Travis CI to cache the dependencies
 
 before_install:
   # - export CHROME_BIN=chromium-browser
@@ -27,14 +30,17 @@ script:
   # - npm run e2e
 
 after_success:
-  - docker build -t angular-client:dev .
-  - docker run -d --name angular-client -p  4200:4200 angular-client:dev
+
+before_deploy: npm install now --no-save # Install Now CLI on Travis
 
 deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
-  on:
-    branch: master
-  target_branch: gh-pages
-  local_dir: /user/src/app
+  - provider: script
+    script: now --token $NOW_TOKEN
+    skip_cleanup: true
+    on:
+      master: true
+  - provider: script
+    script: now --token $NOW_TOKEN && now alias --token $NOW_TOKEN
+    skip_cleanup: true
+    on:
+      master: true
