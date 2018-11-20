@@ -1,4 +1,8 @@
 {
+  "type": "docker",
+  "features": {
+    "cloud": "v2"
+  },
   "name": "mean-docker-angular-client",
   "alias": "mean-docker-angular-client"
 }
